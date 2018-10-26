@@ -1,7 +1,15 @@
-const commonWebpack = require('./webpack.common.js');
+const webpackCommon = require('./webpack.config.js');
+const path = require('path');
+
 
 module.exports = {
-    ...commonWebpack("development"),
-    mode: "development",
-    devtool: 'source-map',
+    ...webpackCommon,
+    mode: 'development',
+
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 3000,
+        historyApiFallback: true
+    }
 };

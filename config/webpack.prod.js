@@ -1,8 +1,8 @@
-const commonWebpack = require('./webpack.common.js');
+const webpackCommon = require('./webpack.config.js');
 
 module.exports = {
-    ...commonWebpack("production"),
-    mode: "production",
-    devtool: 'source-map',
+    ...webpackCommon,
+    mode: 'production',
+    devtool: 'none',
 
 };
