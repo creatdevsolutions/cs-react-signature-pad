@@ -16,7 +16,7 @@ interface Props {
     height: number;
     width: number;
 
-    ref: RefObject<SignaturePad>
+    ref: RefObject<SignaturePad>;
     className?: string;
     style?: object;
 }
@@ -118,7 +118,7 @@ export default class SignaturePad extends React.Component<Props> {
 
         this._canvas.width = this.props.width;
         this._canvas.height = this.props.height;
-        //ctx.scale(ratio, ratio);
+        // ctx.scale(ratio, ratio);
         this._isEmpty = true;
     }
 
