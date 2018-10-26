@@ -23,19 +23,19 @@ interface Props {
 
 export default class SignaturePad extends React.Component<Props> {
 
-    velocityFilterWeight: number;
-    minWidth: number;
-    maxWidth: number;
-    dotSize: number | Function;
-    penColor: string;
-    backgroundColor: string;
-    onEnd: Function;
-    onBegin: Function;
+    _velocityFilterWeight: number;
+    _minWidth: number;
+    _maxWidth: number;
+    _dotSize: number | Function;
+    _penColor: string;
+    _backgroundColor: string;
+    _onEnd: Function;
+    _onBegin: Function;
     _canvas: HTMLCanvasElement;
-    canvasRef: RefObject<HTMLCanvasElement>;
+    _canvasRef: RefObject<HTMLCanvasElement>;
     _ctx: CanvasRenderingContext2D;
     _isEmpty: boolean;
-    points: Point[];
+    _points: Point[];
     _lastVelocity: number;
     _lastWidth: number;
     _mouseButtonDown: boolean;
@@ -43,20 +43,20 @@ export default class SignaturePad extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        this.velocityFilterWeight = this.props.velocityFilterWeight || 0.7;
-        this.minWidth = this.props.minWidth || 0.5;
-        this.maxWidth = this.props.maxWidth || 2.5;
-        this.dotSize = this.props.dotSize || (() => (this.minWidth + this.maxWidth) / 2);
-        this.penColor = this.props.penColor || "black";
-        this.backgroundColor = this.props.backgroundColor || "rgba(0,0,0,0)";
-        this.onEnd = this.props.onEnd;
-        this.onBegin = this.props.onBegin;
+        this._velocityFilterWeight = this.props.velocityFilterWeight || 0.7;
+        this._minWidth = this.props.minWidth || 0.5;
+        this._maxWidth = this.props.maxWidth || 2.5;
+        this._dotSize = this.props.dotSize || (() => (this._minWidth + this._maxWidth) / 2);
+        this._penColor = this.props.penColor || "black";
+        this._backgroundColor = this.props.backgroundColor || "rgba(0,0,0,0)";
+        this._onEnd = this.props.onEnd;
+        this._onBegin = this.props.onBegin;
 
-        this.canvasRef = React.createRef<HTMLCanvasElement>();
+        this._canvasRef = React.createRef<HTMLCanvasElement>();
     }
 
     componentDidMount() {
-        this._canvas = this.canvasRef.current;
+        this._canvas = this._canvasRef.current;
         this._ctx = this._canvas.getContext("2d");
         this.clear(null);
 
@@ -76,7 +76,7 @@ export default class SignaturePad extends React.Component<Props> {
         let ctx = this._ctx,
             canvas = this._canvas;
 
-        ctx.fillStyle = this.backgroundColor;
+        ctx.fillStyle = this._backgroundColor;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         this._reset();
@@ -123,11 +123,11 @@ export default class SignaturePad extends React.Component<Props> {
     }
 
     _reset() {
-        this.points = [];
+        this._points = [];
         this._lastVelocity = 0;
-        this._lastWidth = (this.minWidth + this.maxWidth) / 2;
+        this._lastWidth = (this._minWidth + this._maxWidth) / 2;
         this._isEmpty = true;
-        this._ctx.fillStyle = this.penColor;
+        this._ctx.fillStyle = this._penColor;
     }
 
     _handleMouseEvents() {
@@ -208,14 +208,14 @@ export default class SignaturePad extends React.Component<Props> {
     _strokeBegin(event: any) {
         this._reset();
         this._strokeUpdate(event);
-        if (typeof this.onBegin === "function") {
-            this.onBegin(event);
+        if (typeof this._onBegin === "function") {
+            this._onBegin(event);
         }
     }
 
     _strokeDraw(point: Point) {
         let ctx = this._ctx,
-            dotSize = typeof(this.dotSize) === "function" ? this.dotSize() : this.dotSize;
+            dotSize = typeof(this._dotSize) === "function" ? this._dotSize() : this._dotSize;
 
         ctx.beginPath();
         this._drawPoint(point.x, point.y, dotSize);
@@ -224,14 +224,14 @@ export default class SignaturePad extends React.Component<Props> {
     }
 
     _strokeEnd(event: any) {
-        let canDrawCurve = this.points.length > 2,
-            point = this.points[0];
+        let canDrawCurve = this._points.length > 2,
+            point = this._points[0];
 
         if (!canDrawCurve && point) {
             this._strokeDraw(point);
         }
-        if (typeof this.onEnd === "function") {
-            this.onEnd(event);
+        if (typeof this._onEnd === "function") {
+            this._onEnd(event);
         }
     }
 
@@ -244,14 +244,14 @@ export default class SignaturePad extends React.Component<Props> {
     }
 
     _addPoint(point: any) {
-        let points = this.points,
+        let points = this._points,
             c2, c3,
             curve, tmp;
 
         points.push(point);
 
         if (points.length > 2) {
-            // To reduce the initial lag make it work with 3 points
+            // To reduce the initial lag make it work with 3 _points
             // by copying the first point to the beginning.
             if (points.length === 3) points.unshift(points[0]);
 
@@ -263,7 +263,7 @@ export default class SignaturePad extends React.Component<Props> {
             this._addCurve(curve);
 
             // Remove the first element from the list,
-            // so that we always have no more than 4 points in points array.
+            // so that we always have no more than 4 _points in _points array.
             points.shift();
         }
     }
@@ -299,8 +299,8 @@ export default class SignaturePad extends React.Component<Props> {
             velocity, newWidth;
 
         velocity = endPoint.velocityFrom(startPoint);
-        velocity = this.velocityFilterWeight * velocity
-            + (1 - this.velocityFilterWeight) * this._lastVelocity;
+        velocity = this._velocityFilterWeight * velocity
+            + (1 - this._velocityFilterWeight) * this._lastVelocity;
 
         newWidth = this._strokeWidth(velocity);
         this._drawCurve(curve, this._lastWidth, newWidth);
@@ -351,14 +351,14 @@ export default class SignaturePad extends React.Component<Props> {
     }
 
     _strokeWidth(velocity: number) {
-        return Math.max(this.maxWidth / (velocity + 1), this.minWidth);
+        return Math.max(this._maxWidth / (velocity + 1), this._minWidth);
     }
 
     render() {
         const {style, className} = this.props;
         return (
             <div  className={className} style={style}>
-                <canvas ref={this.canvasRef} />
+                <canvas ref={this._canvasRef} />
             </div>
         );
     }
