@@ -12,6 +12,13 @@ interface Props {
     backgroundColor?: string;
     onEnd?: Function;
     onBegin?: Function;
+
+    height: number;
+    width: number;
+
+    ref: RefObject<SignaturePad>
+    className?: string;
+    style?: object;
 }
 
 export default class SignaturePad extends React.Component<Props> {
@@ -62,7 +69,7 @@ export default class SignaturePad extends React.Component<Props> {
         this.off();
     }
 
-    clear(e: any) {
+    clear(e?: any) {
         if (e) {
             e.preventDefault();
         }
@@ -100,16 +107,18 @@ export default class SignaturePad extends React.Component<Props> {
     }
 
     _resizeCanvas() {
-        let ctx = this._ctx,
+        /*let ctx = this._ctx,
             canvas = this._canvas;
         // When zoomed out to less than 100%, for some very strange reason,
         // some browsers report devicePixelRatio as less than 1
         // and only part of the canvas is cleared then.
-        let ratio = Math.max(window.devicePixelRatio || 1, 1);
-        canvas.width = canvas.offsetWidth * ratio;
-        canvas.height = canvas.offsetHeight * ratio;
+        /*let ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = //canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;*/
 
-        ctx.scale(ratio, ratio);
+        this._canvas.width = this.props.width;
+        this._canvas.height = this.props.height;
+        //ctx.scale(ratio, ratio);
         this._isEmpty = true;
     }
 
@@ -346,11 +355,10 @@ export default class SignaturePad extends React.Component<Props> {
     }
 
     render() {
+        const {style, className} = this.props;
         return (
-            <div id="signature-pad" className="m-signature-pad">
-                <div className="m-signature-pad--body">
-                    <canvas ref={this.canvasRef} />
-                </div>
+            <div  className={className} style={style}>
+                <canvas ref={this.canvasRef} />
             </div>
         );
     }

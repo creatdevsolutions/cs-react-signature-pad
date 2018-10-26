@@ -1,5 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import SignaturePad from "../src/pad/SignaturePad";
+import App from "./src/App";
 
-ReactDOM.render(<SignaturePad />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));

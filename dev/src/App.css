@@ -1,0 +1,17 @@
+.SignaturePad {
+    border: 1px solid gray;
+    border-radius: 0.5em;
+}
+
+.SignaturePadCard {
+    width: 640px;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+.ButtonList {
+    margin-top: 1em;
+    display: flex;
+    flex-flow: row;
+    flex-direction: row-reverse;
+}
