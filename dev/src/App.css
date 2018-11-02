@@ -9,6 +9,13 @@
     display: table;
 }
 
+.FullScreenCloseButton {
+    position: absolute !important;
+    right: 1em;
+    top: 1em;
+    z-index: 10000;
+}
+
 .SignaturePadCardContainer {
     width: 100%;
     display: block;

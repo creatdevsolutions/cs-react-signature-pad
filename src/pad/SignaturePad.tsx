@@ -2,6 +2,8 @@ import *  as React from "react";
 import BezierCurve from "../util/BezierCurve";
 import Point from "../util/Point";
 import {RefObject} from "react";
+import * as classnames from "classnames";
+import styles from "./SignaturePad.css";
 
 interface Props {
     velocityFilterWeight?: number;
@@ -122,10 +124,20 @@ export default class SignaturePad extends React.Component<Props> {
         /*let ratio = Math.max(window.devicePixelRatio || 1, 1);
         canvas.width = //canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;*/
-        this._canvas.width = this.props.width;
-        this._canvas.height = this.props.height;
+
+        if(this.props.showFullScreen) {
+            this._canvas.width = window.innerWidth;
+            this._canvas.height = window.innerHeight;
+        }
+        else {
+            this._canvas.width = this.props.width;
+            this._canvas.height = this.props.height;
+        }
+
+
+
         // ctx.scale(ratio, ratio);
-        this._isEmpty = true;
+        // this._isEmpty = true;
     }
 
     _reset() {
@@ -361,11 +373,21 @@ export default class SignaturePad extends React.Component<Props> {
     }
 
     render() {
-        const {style, className} = this.props;
+        const {style, className, showFullScreen, width, height, fullScreenCloseAction} = this.props;
+
+        let newWidth: number = showFullScreen ? null : width;
+        let newHeight: number = showFullScreen ? null : height;
+
         console.log(this.props);
         return (
-            <div  className={className} style={{width: this.props.width, height: this.props.height, ...style}}>
+            <div
+                className={classnames(className, showFullScreen && styles.SignaturePadFullScreen)}
+                style={{width: newWidth, height: newHeight, backgroundColor: this._backgroundColor, ...style}}>
                 <canvas ref={this._canvasRef} />
+                {
+                    showFullScreen ?
+                        fullScreenCloseAction : null
+                }
             </div>
         );
     }

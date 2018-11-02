@@ -8,7 +8,10 @@ import * as FileSaver from 'file-saver';
 import TextField from "@material-ui/core/es/TextField/TextField";
 import Typography from "@material-ui/core/es/Typography/Typography";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
-import Icon from "@material-ui/core/es/Icon/Icon";
+import CloseIcon from "@material-ui/icons/Close";
+
+// import Checkbox from "@material-ui/core/es/Checkbox/Checkbox";
+// import FormControlLabel from "@material-ui/core/es/FormControlLabel/FormControlLabel";
 
 interface Props {
 
@@ -72,6 +75,13 @@ class App extends React.Component<Props, State> {
         });
     }
 
+    handleCheckboxChange(name: keyof State, e: any) {
+        // @ts-ignore
+        this.setState({
+            [name]: e.target.checked
+        });
+    }
+
     toggleFullScreen() {
         this.setState({
             isFullScreen: !this.state.isFullScreen
@@ -86,11 +96,12 @@ class App extends React.Component<Props, State> {
     render() {
 
         const closeFullScreenButton =
-            <IconButton onClick={this.toggleFullScreen.bind(this)}>
-                <Icon>
-                    close
-                </Icon>
+            <IconButton onClick={this.toggleFullScreen.bind(this)} className={styles.FullScreenCloseButton}>
+                <CloseIcon />
             </IconButton>;
+
+            // <FormControlLabel label={"Fullscreen"} control={<Checkbox checked={this.state.isFullScreen} onChange={this.handleCheckboxChange.bind(this,"isFullScreen")}/>}
+        //                             />
 
         return (
             <React.Fragment>
@@ -114,6 +125,7 @@ class App extends React.Component<Props, State> {
                                 onChange={this.handleTextfieldChange.bind(this, 'height')}
                                 margin="normal"
                             />
+
                         </div>
                     </form>
                 </Card>
@@ -126,6 +138,7 @@ class App extends React.Component<Props, State> {
                             width={Number(this.state.width)}
                             showFullScreen={this.state.isFullScreen}
                             fullScreenCloseAction={closeFullScreenButton}
+                            backgroundColor={"#FFFFFF"}
                         />
                         <div className={styles.ButtonList}>
                             <Button
