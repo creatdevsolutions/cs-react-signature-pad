@@ -5,16 +5,19 @@ import {RefObject} from "react";
 
 interface Props {
     velocityFilterWeight?: number;
-    minWidth?: number;
-    maxWidth?: number;
+    minStrokeWidth?: number;
+    maxStrokeWidth?: number;
     dotSize?: number | Function;
     penColor?: string;
     backgroundColor?: string;
     onEnd?: Function;
     onBegin?: Function;
 
-    height: number;
-    width: number;
+    height?: number;
+    width?: number;
+
+    showFullScreen?: boolean;
+    fullScreenCloseAction?: React.ReactElement<any>
 
     ref: RefObject<SignaturePad>;
     className?: string;
@@ -24,8 +27,8 @@ interface Props {
 export default class SignaturePad extends React.Component<Props> {
 
     _velocityFilterWeight: number;
-    _minWidth: number;
-    _maxWidth: number;
+    _minStrokeWidth: number;
+    _maxStrokeWidth: number;
     _dotSize: number | Function;
     _penColor: string;
     _backgroundColor: string;
@@ -44,10 +47,10 @@ export default class SignaturePad extends React.Component<Props> {
         super(props);
 
         this._velocityFilterWeight = this.props.velocityFilterWeight || 0.7;
-        this._minWidth = this.props.minWidth || 0.5;
-        this._maxWidth = this.props.maxWidth || 2.5;
-        this._dotSize = this.props.dotSize || (() => (this._minWidth + this._maxWidth) / 2);
-        this._penColor = this.props.penColor || "black";
+        this._minStrokeWidth = this.props.minStrokeWidth || 0.5;
+        this._maxStrokeWidth = this.props.maxStrokeWidth || 2.5;
+        this._dotSize = this.props.dotSize || (() => (this._maxStrokeWidth + this._minStrokeWidth) / 2);
+        this._penColor = this.props.penColor || "#000000";
         this._backgroundColor = this.props.backgroundColor || "rgba(0,0,0,0)";
         this._onEnd = this.props.onEnd;
         this._onBegin = this.props.onBegin;
@@ -106,6 +109,10 @@ export default class SignaturePad extends React.Component<Props> {
         return this._isEmpty;
     }
 
+    componentDidUpdate() {
+        this._resizeCanvas();
+    }
+
     _resizeCanvas() {
         /*let ctx = this._ctx,
             canvas = this._canvas;
@@ -115,7 +122,6 @@ export default class SignaturePad extends React.Component<Props> {
         /*let ratio = Math.max(window.devicePixelRatio || 1, 1);
         canvas.width = //canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;*/
-
         this._canvas.width = this.props.width;
         this._canvas.height = this.props.height;
         // ctx.scale(ratio, ratio);
@@ -125,7 +131,7 @@ export default class SignaturePad extends React.Component<Props> {
     _reset() {
         this._points = [];
         this._lastVelocity = 0;
-        this._lastWidth = (this._minWidth + this._maxWidth) / 2;
+        //this._lastWidth = (this._minStrokeWidth + this._maxStrokeWidth) / 2;
         this._isEmpty = true;
         this._ctx.fillStyle = this._penColor;
     }
@@ -351,13 +357,14 @@ export default class SignaturePad extends React.Component<Props> {
     }
 
     _strokeWidth(velocity: number) {
-        return Math.max(this._maxWidth / (velocity + 1), this._minWidth);
+        return Math.max(this._maxStrokeWidth / (velocity + 1), this._minStrokeWidth);
     }
 
     render() {
         const {style, className} = this.props;
+        console.log(this.props);
         return (
-            <div  className={className} style={style}>
+            <div  className={className} style={{width: this.props.width, height: this.props.height, ...style}}>
                 <canvas ref={this._canvasRef} />
             </div>
         );
