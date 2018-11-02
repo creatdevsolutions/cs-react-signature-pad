@@ -67,7 +67,7 @@ export default class SignaturePad extends React.Component<Props> {
 
         this._handleMouseEvents();
         this._handleTouchEvents();
-        this._resizeCanvas();
+        this._resizeCanvas(true);
     }
 
     componentWillUnmount() {
@@ -115,7 +115,7 @@ export default class SignaturePad extends React.Component<Props> {
         this._resizeCanvas();
     }
 
-    _resizeCanvas() {
+    _resizeCanvas(initial?: boolean) {
         /*let ctx = this._ctx,
             canvas = this._canvas;
         // When zoomed out to less than 100%, for some very strange reason,
@@ -125,16 +125,37 @@ export default class SignaturePad extends React.Component<Props> {
         canvas.width = //canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;*/
 
-        if(this.props.showFullScreen) {
-            this._canvas.width = window.innerWidth;
-            this._canvas.height = window.innerHeight;
+        if(initial) {
+            if (this.props.showFullScreen) {
+                this._canvas.width = window.innerWidth;
+                this._canvas.height = window.innerHeight;
+            }
+            else {
+                this._canvas.width = this.props.width;
+                this._canvas.height = this.props.height;
+            }
+            return;
+        }
+
+        let oldWidth = this._canvas.width;
+        let oldHeight = this._canvas.height;
+
+        let ratio1, ratio2;
+        if (this.props.showFullScreen) {
+            ratio1 = oldWidth / window.innerWidth;
+            ratio2 = oldHeight / window.innerHeight;
+            // this._canvas.width = window.innerWidth;
+            // this._canvas.height = window.innerHeight;
         }
         else {
-            this._canvas.width = this.props.width;
-            this._canvas.height = this.props.height;
+            ratio1 = oldWidth / this.props.width;
+            ratio2 = oldHeight / this.props.height;
+            //this._canvas.width = this.props.width;
+            //this._canvas.height = this.props.height;
         }
 
 
+        this._ctx.scale(ratio1, ratio2);
 
         // ctx.scale(ratio, ratio);
         // this._isEmpty = true;
@@ -143,7 +164,7 @@ export default class SignaturePad extends React.Component<Props> {
     _reset() {
         this._points = [];
         this._lastVelocity = 0;
-        //this._lastWidth = (this._minStrokeWidth + this._maxStrokeWidth) / 2;
+        this._lastWidth = (this._minStrokeWidth + this._maxStrokeWidth) / 2;
         this._isEmpty = true;
         this._ctx.fillStyle = this._penColor;
     }
@@ -175,7 +196,7 @@ export default class SignaturePad extends React.Component<Props> {
         this._canvas.removeEventListener("touchmove", this._handleTouchMove);
         document.removeEventListener("touchend", this._handleTouchEnd);
 
-        window.removeEventListener("resize", this._resizeCanvas);
+        window.removeEventListener("resize", this._resizeCanvas.bind(this, false));
     }
 
     _handleMouseDown(event: any) {
@@ -383,7 +404,7 @@ export default class SignaturePad extends React.Component<Props> {
             <div
                 className={classnames(className, showFullScreen && styles.SignaturePadFullScreen)}
                 style={{width: newWidth, height: newHeight, backgroundColor: this._backgroundColor, ...style}}>
-                <canvas ref={this._canvasRef} />
+                <canvas ref={this._canvasRef}/>
                 {
                     showFullScreen ?
                         fullScreenCloseAction : null
