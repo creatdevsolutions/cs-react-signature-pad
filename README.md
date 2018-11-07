@@ -1,27 +1,64 @@
 [![npm package](https://img.shields.io/badge/npm-0.0.6-orange.svg?style=flat-square)](https://www.npmjs.com/package/react-signature-pad)
 
 # React Signature Pad
-A [signature pad](https://github.com/szimek/signature_pad) implementation for react.
+A [signature pad](https://github.com/creatdevsolutions/cs-react-signature-pad) implementation for react in Typescript.
 
 # Basic Usage
 
 ```javascript
-var React = require('react');
-var SignaturePad = require('react-signature-pad');
 
-React.render(
-  <SignaturePad clearButton="true" />,
-  document.body
-)
+interface Props {
+
+}
+
+interface State {
+
+}
+
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.signaturePadRef = React.createFef<SignaturePad>();
+    }
+
+    render() {
+        return (
+            <SignaturePad
+                ref={this.signaturePadRef}
+                className={styles.SignaturePad}
+            />
+        )
+    }
+
+    componentDidMount() {
+        const signaturePad: SignaturePad = this.signaturePadRef.current;
+
+       // do some stuff
+    }
+}
+
+
 ```
+
+# Props
+
+
+
+| Name | Optional | DefaultValue | Description
+| -------- | -------- | -------- | --------
+| penColor     | true     | #000000     | Sets the color of the pen to draw
+| backgroundColor     | true     | #FFFFFF     | Sets the backgroundColor of the canvas
+| height     | false     | 150     | Height in pixel of the pad
+| width     | false     | 300     | Width in pixel of the pad
+| onEnd     | true     | -     | Callback, fired when drawing a line ends
+| onBegin     | true     | -     | Callback, fired when drawing a line begins
+| ref     | false     | -     | React ref for the pad, only possible way to get data out of the pad
 
 # Methods
 
 ```javascript
-<SignaturePad clearButton="true" ref="mySignature" />
-...
-
-var signature = this.refs.mySignature;
+const signaturePad: SignaturePad = this.signaturePadRef.current;
 
 // Methods
 
@@ -50,9 +87,6 @@ signature.toDataURL();
 signature.fromDataURL(base64String);
 
 ```
-
-# CSS
-In order to make the signature pad work correctly you will need the css as well.  All the relevant styles are in [this file](style.css).
 
 # Example
 ```bash
