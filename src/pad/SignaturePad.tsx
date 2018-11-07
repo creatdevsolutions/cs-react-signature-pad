@@ -24,14 +24,18 @@ interface Props {
     style?: object;
 }
 
-export default class SignaturePad extends React.Component<Props> {
+interface State {
+    updateCanvas: Function;
+}
+
+export default class SignaturePad extends React.Component<Props, State> {
 
     _velocityFilterWeight: number;
     _minStrokeWidth: number;
     _maxStrokeWidth: number;
-    _dotSize: number | Function;
-    _penColor: string;
-    _backgroundColor: string;
+    //_dotSize: number | Function;
+    //_penColor: string;
+    //_backgroundColor: string;
     _onEnd: Function;
     _onBegin: Function;
     _canvas: HTMLCanvasElement;
@@ -46,12 +50,17 @@ export default class SignaturePad extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
+        this.state = {
+            updateCanvas: this.updateCanvas.bind(this)
+        };
+
+
         this._velocityFilterWeight = this.props.velocityFilterWeight || 0.7;
         this._minStrokeWidth = this.props.minStrokeWidth || 0.5;
         this._maxStrokeWidth = this.props.maxStrokeWidth || 2.5;
-        this._dotSize = this.props.dotSize || (() => (this._maxStrokeWidth + this._minStrokeWidth) / 2);
-        this._penColor = this.props.penColor || "#000000";
-        this._backgroundColor = this.props.backgroundColor || "rgba(0,0,0,0)";
+        //this._dotSize = this.props.dotSize || (() => (this._maxStrokeWidth + this._minStrokeWidth) / 2);
+        //this._penColor = this.props.penColor || "#AAAAAA";
+        //this._backgroundColor = this.props.backgroundColor || "rgba(0,0,0,0)";
         this._onEnd = this.props.onEnd;
         this._onBegin = this.props.onBegin;
 
@@ -68,6 +77,22 @@ export default class SignaturePad extends React.Component<Props> {
         this._resizeCanvas();
     }
 
+    updateCanvas(props: Props) {
+        if( !this._ctx)
+            return;
+
+        this._ctx.fillStyle = props.penColor;
+    }
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if(prevState.updateCanvas)
+            prevState.updateCanvas(nextProps);
+
+        return {
+
+        }
+    }
+
     componentWillUnmount() {
         this.off();
     }
@@ -79,9 +104,8 @@ export default class SignaturePad extends React.Component<Props> {
         let ctx = this._ctx,
             canvas = this._canvas;
 
-        ctx.fillStyle = this._backgroundColor;
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
         this._reset();
     }
 
@@ -110,7 +134,7 @@ export default class SignaturePad extends React.Component<Props> {
     }
 
     componentDidUpdate() {
-        this._resizeCanvas();
+        //his._resizeCanvas();
     }
 
     _resizeCanvas() {
@@ -131,9 +155,9 @@ export default class SignaturePad extends React.Component<Props> {
     _reset() {
         this._points = [];
         this._lastVelocity = 0;
-        //this._lastWidth = (this._minStrokeWidth + this._maxStrokeWidth) / 2;
+        this._lastWidth = (this._minStrokeWidth + this._maxStrokeWidth) / 2;
         this._isEmpty = true;
-        this._ctx.fillStyle = this._penColor;
+        this._ctx.fillStyle = this.props.penColor;
     }
 
     _handleMouseEvents() {
@@ -221,8 +245,9 @@ export default class SignaturePad extends React.Component<Props> {
 
     _strokeDraw(point: Point) {
         let ctx = this._ctx,
-            dotSize = typeof(this._dotSize) === "function" ? this._dotSize() : this._dotSize;
+            dotSize = typeof(this.props.dotSize) === "function" ? this.props.dotSize() : this.props.dotSize;
 
+        console.log(dotSize);
         ctx.beginPath();
         this._drawPoint(point.x, point.y, dotSize);
         ctx.closePath();
@@ -365,7 +390,7 @@ export default class SignaturePad extends React.Component<Props> {
         console.log(this.props);
         return (
             <div  className={className} style={{width: this.props.width, height: this.props.height, ...style}}>
-                <canvas ref={this._canvasRef} />
+                <canvas ref={this._canvasRef} style={{backgroundColor: this.props.backgroundColor}}/>
             </div>
         );
     }

@@ -18,6 +18,9 @@ interface State {
     width: number;
     height: number;
     isFullScreen: boolean;
+    dotSize: number;
+    penColor: string;
+    backgroundColor: string;
 }
 
 class App extends React.Component<Props, State> {
@@ -31,7 +34,10 @@ class App extends React.Component<Props, State> {
         this.state = {
             width: 600,
             height: 300,
-            isFullScreen: false
+            isFullScreen: false,
+            dotSize: 3,
+            penColor: "#000000",
+            backgroundColor: "#FFFFFF"
         };
     }
 
@@ -114,6 +120,20 @@ class App extends React.Component<Props, State> {
                                 onChange={this.handleTextfieldChange.bind(this, 'height')}
                                 margin="normal"
                             />
+                            <TextField
+                                id="penColor"
+                                label="Pen Color"
+                                value={this.state.penColor}
+                                onChange={this.handleTextfieldChange.bind(this, 'penColor')}
+                                margin="normal"
+                            />
+                            <TextField
+                                id="backgroundColor"
+                                label="Background Color"
+                                value={this.state.backgroundColor}
+                                onChange={this.handleTextfieldChange.bind(this, 'backgroundColor')}
+                                margin="normal"
+                            />
                         </div>
                     </form>
                 </Card>
@@ -126,6 +146,9 @@ class App extends React.Component<Props, State> {
                             width={Number(this.state.width)}
                             showFullScreen={this.state.isFullScreen}
                             fullScreenCloseAction={closeFullScreenButton}
+                            penColor={this.state.penColor}
+                            dotSize={this.state.dotSize}
+                            backgroundColor={this.state.backgroundColor}
                         />
                         <div className={styles.ButtonList}>
                             <Button
@@ -139,11 +162,6 @@ class App extends React.Component<Props, State> {
                                 onClick={this.clearSignature.bind(this)}
                             >
                                 Clear
-                            </Button>
-                            <Button
-                                onClick={this.toggleFullScreen.bind(this)}
-                            >
-                                Fullscreen
                             </Button>
                         </div>
                     </Card>
