@@ -1,5 +1,5 @@
 {
-  "name": "@cs/cs-react-signature-pad",
+  "name": "@creatdevsolutions/cs-react-signature-pad",
   "version": "0.0.1",
   "description": "A signature pad implementation for react with typescript",
   "main": "build/index.js",
