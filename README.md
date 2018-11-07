@@ -64,25 +64,25 @@ const signaturePad: SignaturePad = this.signaturePadRef.current;
 // isEmpty() - returns boolean
 // ===============================================
 
-signature.isEmpty();
+signaturePad.isEmpty();
 
 // ===============================================
 // clear() - clears canvas
 // ===============================================
 
-signature.clear();
+signaturePad.clear();
 
 // ===============================================
 // toDataURL() - retrieves image as a data url
 // ===============================================
 
-signature.toDataURL();
+signaturePad.toDataURL();
 
 // ===============================================
 // fromDataURL() - writes a base64 image to canvas
 // ===============================================
 
-signature.fromDataURL(base64String);
+signaturePad.fromDataURL(base64String);
 
 ```
 
