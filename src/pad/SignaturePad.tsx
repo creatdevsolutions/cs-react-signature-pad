@@ -4,6 +4,7 @@ import Point from "../util/Point";
 import {RefObject} from "react";
 import * as classnames from "classnames";
 import styles from "./SignaturePad.css";
+//import resizeCanvas from "resize-canvas";
 
 interface Props {
     velocityFilterWeight?: number;
@@ -75,6 +76,7 @@ export default class SignaturePad extends React.Component<Props> {
     }
 
     clear(e?: any) {
+        debugger;
         if (e) {
             e.preventDefault();
         }
@@ -121,7 +123,7 @@ export default class SignaturePad extends React.Component<Props> {
         // When zoomed out to less than 100%, for some very strange reason,
         // some browsers report devicePixelRatio as less than 1
         // and only part of the canvas is cleared then.
-        /*let ratio = Math.max(window.devicePixelRatio || 1, 1);
+        let ratio = Math.max(window.devicePixelRatio || 1, 1);
         canvas.width = //canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;*/
 
@@ -137,26 +139,54 @@ export default class SignaturePad extends React.Component<Props> {
             return;
         }
 
+        //const picture: string = this.toDataURL("jpg", 100);
+        let canvas:HTMLCanvasElement = document.createElement('canvas');
+        let canvasContext = canvas.getContext("2d");
+        canvas.width = this._canvas.width;
+        canvas.height = this._canvas.height;
+
+
+        const imageData = this._ctx.getImageData(0,0,this._canvas.width, this._canvas.height);
+        canvasContext.putImageData(imageData, 0, 0);
+
+
         let oldWidth = this._canvas.width;
         let oldHeight = this._canvas.height;
-
         let ratio1, ratio2;
         if (this.props.showFullScreen) {
-            ratio1 = oldWidth / window.innerWidth;
-            ratio2 = oldHeight / window.innerHeight;
-            // this._canvas.width = window.innerWidth;
-            // this._canvas.height = window.innerHeight;
+            ratio1 = window.innerWidth / oldWidth;
+            ratio2 = window.innerHeight / oldHeight;
+            this._ctx.lineWidth = 10;
+             this._canvas.width = window.innerWidth;
+             //this._canvas.height = window.innerHeight;
         }
         else {
-            ratio1 = oldWidth / this.props.width;
-            ratio2 = oldHeight / this.props.height;
-            //this._canvas.width = this.props.width;
+            ratio1 = this.props.width / oldWidth;
+            ratio2 = this.props.height / oldHeight;
+            this._ctx.lineWidth = 5;
+            this._canvas.width = this.props.width;
             //this._canvas.height = this.props.height;
         }
 
+        console.log(ratio1);
+        console.log(ratio2);
 
-        this._ctx.scale(ratio1, ratio2);
+        //debugger;
 
+        //this._ctx.lineWidth = this._ctx.lineWidth * ratio1;
+
+
+        console.log(this._ctx);
+        //this._ctx.putImageData(imageData, 0, 0, 0,0,this._canvas.width, this._canvas.height);
+        this._ctx.drawImage(canvas, 0,0, this._canvas.width, this._canvas.height);
+        //debugger;
+        //his._ctx.drawImage(canvas, 0, 0);
+        //const scaleToFit = Math.max(ratio1, ratio2);
+
+        //this._canvas.style.transformOrigin = '0 0'; //scale from top left
+        //this._canvas.style.transform = 'scale(' + ratio2 + ', ' + ratio1 +  ')';
+
+        //this.fromDataURL(picture);
         // ctx.scale(ratio, ratio);
         // this._isEmpty = true;
     }
@@ -402,9 +432,9 @@ export default class SignaturePad extends React.Component<Props> {
         console.log(this.props);
         return (
             <div
-                className={classnames(className, showFullScreen && styles.SignaturePadFullScreen)}
+                className={classnames(showFullScreen && styles.SignaturePadFullScreen)}
                 style={{width: newWidth, height: newHeight, backgroundColor: this._backgroundColor, ...style}}>
-                <canvas ref={this._canvasRef}/>
+                <canvas ref={this._canvasRef} className={classnames(className, styles.SignaturePadCanvas)}/>
                 {
                     showFullScreen ?
                         fullScreenCloseAction : null
