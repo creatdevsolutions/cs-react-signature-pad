@@ -90,4 +90,4 @@ signature.fromDataURL(base64String);
 ```bash
 $ npm start
 ```
-Then navigate to http://localhost:8080/ in your browser and you should be able to see the signature pad in action.
+Then navigate to http://localhost:3000/ in your browser and you should be able to see the signature pad in action.
