@@ -17,7 +17,7 @@ interface Props {
     width?: number;
 
     showFullScreen?: boolean;
-    fullScreenCloseAction?: React.ReactElement<any>
+    fullScreenCloseAction?: React.ReactElement<any>;
 
     ref: RefObject<SignaturePad>;
     className?: string;
@@ -33,9 +33,9 @@ export default class SignaturePad extends React.Component<Props, State> {
     _velocityFilterWeight: number;
     _minStrokeWidth: number;
     _maxStrokeWidth: number;
-    //_dotSize: number | Function;
-    //_penColor: string;
-    //_backgroundColor: string;
+    // _dotSize: number | Function;
+    // _penColor: string;
+    // _backgroundColor: string;
     _onEnd: Function;
     _onBegin: Function;
     _canvas: HTMLCanvasElement;
@@ -58,9 +58,9 @@ export default class SignaturePad extends React.Component<Props, State> {
         this._velocityFilterWeight = this.props.velocityFilterWeight || 0.7;
         this._minStrokeWidth = this.props.minStrokeWidth || 0.5;
         this._maxStrokeWidth = this.props.maxStrokeWidth || 2.5;
-        //this._dotSize = this.props.dotSize || (() => (this._maxStrokeWidth + this._minStrokeWidth) / 2);
-        //this._penColor = this.props.penColor || "#AAAAAA";
-        //this._backgroundColor = this.props.backgroundColor || "rgba(0,0,0,0)";
+        // this._dotSize = this.props.dotSize || (() => (this._maxStrokeWidth + this._minStrokeWidth) / 2);
+        // this._penColor = this.props.penColor || "#AAAAAA";
+        // this._backgroundColor = this.props.backgroundColor || "rgba(0,0,0,0)";
         this._onEnd = this.props.onEnd;
         this._onBegin = this.props.onBegin;
 
@@ -78,19 +78,19 @@ export default class SignaturePad extends React.Component<Props, State> {
     }
 
     updateCanvas(props: Props) {
-        if( !this._ctx)
+        if (!this._ctx)
             return;
 
         this._ctx.fillStyle = props.penColor;
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-        if(prevState.updateCanvas)
+        if (prevState.updateCanvas)
             prevState.updateCanvas(nextProps);
 
         return {
 
-        }
+        };
     }
 
     componentWillUnmount() {
@@ -134,7 +134,7 @@ export default class SignaturePad extends React.Component<Props, State> {
     }
 
     componentDidUpdate() {
-        //his._resizeCanvas();
+        // his._resizeCanvas();
     }
 
     _resizeCanvas() {

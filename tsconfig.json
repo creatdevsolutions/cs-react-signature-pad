@@ -1,12 +1,11 @@
 {
     "include": [
         "./src/**/*",
-        "./dev/**/*",
         "./typings/**/*",
         "./node_modules/@types/**/*"
     ],
     "compilerOptions": {
-        "outDir": ".build",
+        "outDir": "build",
         "baseUrl": "./src",
         "typeRoots": [
             "./node_modules/@types",

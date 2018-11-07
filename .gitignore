@@ -8,3 +8,5 @@ react-signature-pad-*.tgz
 
 .idea/
 .lib/
+
+*.tgz

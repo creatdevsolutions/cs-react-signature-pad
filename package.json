@@ -1,22 +1,30 @@
 {
   "name": "@cs/cs-react-signature-pad",
   "version": "0.0.1",
-  "description": "A signature pad implementation for react with typescript and babel",
+  "description": "A signature pad implementation for react with typescript",
   "main": "build/index.js",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com",
+    "access": "public"
+  },
+  "files": [
+    "build"
+  ],
   "scripts": {
     "start": "webpack-dev-server --watch --hot --config ./config/webpack.dev.js",
-    "build": "npm run lint && npm run build:types && npm run build:js",
-    "build:types": "tsc --emitDeclarationOnly -d --declarationDir build",
-    "build:js": "babel src --out-dir build --extensions \".ts,.tsx\" --source-maps inline && cd src && find . -name '*.css' -exec cp --parents \\{\\} ../build \\; && cd ..",
-    "lint": "tslint src/**/* ",
-    "lintfix": "tslint --fix src/**/* ./test"
+    "build": "npm run lint && npm run build:ts",
+    "build:ts": "tsc -d --declarationDir build",
+    "lint": "tslint src/**/* "
   },
   "keywords": [
     "react",
     "react-component",
     "signature",
+    "canvas",
     "form",
-    "ui"
+    "ui",
+    "pad",
+    "typescript"
   ],
   "repository": {
     "type": "git",
@@ -25,13 +33,6 @@
   "author": "Marten Wallewein, Jason Kadrmas",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
-    "@babel/plugin-proposal-class-properties": "^7.0.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.0.0",
     "@material-ui/core": "^3.3.1",
     "@material-ui/icons": "^3.0.1",
     "@types/file-saver": "^1.3.1",
