@@ -47,6 +47,7 @@ class App extends React.Component {
 | -------- | -------- | -------- | --------
 | penColor     | true     | #000000     | Sets the color of the pen to draw
 | backgroundColor     | true     | #FFFFFF     | Sets the backgroundColor of the canvas
+| defaultImage     | true     | undefined     | Fills the Signaturepad on mounting with this image, does not set it on reset
 | height     | false     | 150     | Height in pixel of the pad
 | width     | false     | 300     | Width in pixel of the pad
 | onEnd     | true     | -     | Callback, fired when drawing a line ends
