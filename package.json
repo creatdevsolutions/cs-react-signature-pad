@@ -1,6 +1,6 @@
 {
   "name": "@creatdevsolutions/cs-react-signature-pad",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A signature pad implementation for react with typescript",
   "main": "build/index.js",
   "publishConfig": {
