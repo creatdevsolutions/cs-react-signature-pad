@@ -15,6 +15,7 @@ interface Props {
 
     height?: number;
     width?: number;
+    defaultImage?: string;
 
     showFullScreen?: boolean;
     fullScreenCloseAction?: React.ReactElement<any>;
@@ -75,6 +76,8 @@ export default class SignaturePad extends React.Component<Props, State> {
         this._handleMouseEvents();
         this._handleTouchEvents();
         this._resizeCanvas();
+
+        this.updateCanvas(this.props);
     }
 
     updateCanvas(props: Props) {
@@ -82,15 +85,11 @@ export default class SignaturePad extends React.Component<Props, State> {
             return;
 
         this._ctx.fillStyle = props.penColor;
-    }
 
-    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-        if (prevState.updateCanvas)
-            prevState.updateCanvas(nextProps);
-
-        return {
-
-        };
+        if (this.props.defaultImage && this.isEmpty()) {
+            this._isEmpty = false;
+            this.fromDataURL(this.props.defaultImage);
+        }
     }
 
     componentWillUnmount() {
@@ -134,6 +133,7 @@ export default class SignaturePad extends React.Component<Props, State> {
     }
 
     componentDidUpdate() {
+        this.updateCanvas(this.props);
         // his._resizeCanvas();
     }
 
@@ -247,7 +247,6 @@ export default class SignaturePad extends React.Component<Props, State> {
         let ctx = this._ctx,
             dotSize = typeof(this.props.dotSize) === "function" ? this.props.dotSize() : this.props.dotSize;
 
-        console.log(dotSize);
         ctx.beginPath();
         this._drawPoint(point.x, point.y, dotSize);
         ctx.closePath();
@@ -387,12 +386,10 @@ export default class SignaturePad extends React.Component<Props, State> {
 
     render() {
         const {style, className} = this.props;
-        console.log(this.props);
         return (
             <div  className={className} style={{width: this.props.width, height: this.props.height, ...style}}>
                 <canvas ref={this._canvasRef} style={{backgroundColor: this.props.backgroundColor}}/>
             </div>
         );
     }
-
 }
